@@ -1,6 +1,7 @@
 const express = require('express');
 const UploadedFile = require('../Models/UploadedFile');
 const User = require('../Models/UserModel');
+const { scheduleEmail } = require('../EmailScheduler/mailer');
 
 const router = express.Router();
 
@@ -67,7 +68,9 @@ router.post('/api/upload', async (req, res) => {
       });
   
       // Save the new file entry to the database
+      console.log(dateTime)
       await newFile.save();
+      scheduleEmail(email,dateTime)
   
       // Respond with a success message and the saved file data
       res.status(201).json({ message: 'File data saved successfully!', file: newFile });
